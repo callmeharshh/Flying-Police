@@ -1,0 +1,531 @@
+(venv) jayeshshete@Jayeshs-MacBook-Air fb % python main.py
+
+============================================================
+  DRONE SECURITY ANALYST AGENT
+============================================================
+Loading weights: 100%|███████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 7018.67it/s]
+
+Video: outside_entry_720p.mp4
+Loading BLIP model: Salesforce/blip-image-captioning-base
+Loading weights: 100%|██████████████████████████████████████████████████████████| 473/473 [00:00<00:00, 49642.32it/s]
+BLIP ready on cpu
+Frames: 84 @ 7.0fps
+
+  Frame 000 (raw 000) → no foreground, skipping
+  Frame 001 (raw 002) → no foreground, skipping
+  Frame 002 (raw 004) → no foreground, skipping
+  Frame 003 (raw 006) → no foreground, skipping
+  Frame 004 (raw 008) → no foreground, skipping
+  Frame 005 (raw 010) → no foreground, skipping
+  Frame 006 (raw 012) → no foreground, skipping
+  Frame 007 (raw 014) → no foreground, skipping
+  Frame 008 (raw 016) → no foreground, skipping
+  Frame 009 (raw 018) → no foreground, skipping
+  Frame 010 (raw 020) → no foreground, skipping
+  Frame 011 (raw 022) → no foreground, skipping
+  Frame 012 (raw 024) → no foreground, skipping
+  Frame 013 (raw 026) → no foreground, skipping
+  Frame 014 (raw 028) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in this surveillance image
+    Activity : entering | Threat: high
+    Track   : track_001 (new object #1)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+Thought: I need to check the recent object positions at the main gate to determine if the detected person is a continuation of a previous track or a new entry.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.Since there are no prior positions at the main gate, this detected person is indeed a new entry.
+
+Action: log_event
+Action Input: "Frame 14: A new person was detected entering the main gate with no prior positions recorded."  Logged: Frame 14: A new person was detected entering the main gate with no prior positions recorded.I have logged the observation of a new person entering the main gate, as there were no prior positions recorded for this location.
+
+Final Answer: A new person was detected entering the main gate with no prior positions recorded.
+> Finished chain.
+    Agent: A new person was detected entering the main gate with no prior positions recorded.
+  Frame 015 (raw 030) → no foreground, skipping                                                                         Frame 016 (raw 032) → 1 object(s) detected
+    Objects  : ['person']                                                                                                 Desc     : a man is seen in this surveillance image
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will first query the recent object positions at the main gate to compare the current bbox center with prior positions.
+
+                                                                                                                    Action: query_track_positions
+Action Input: 'main_gate'
+No prior positions at this location.Since there are no prior positions recorded at the main gate, I will log the observation for this frame as a continuation of the same track, even though it is the first recorded instance of this person entering.
+
+Action: log_event
+Action Input: "Frame 16: A person is continuing to enter the main gate, identified as the same track from previous frames."
+Logged: Frame 16: A person is continuing to enter the main gate, identified as the same track from previous frames."
+I have logged the observation for Frame 16, noting that the person is continuing to enter the main gate as part of the same track.
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.                                                                                                         Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.            Frame 017 (raw 034) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : surveillance photo of a man who was caught in a parking lot in the bronx
+    Activity : entering | Threat: high                                                                                    Track   : track_001 (same object continuing)                                                                      Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will first query the recent object positions at the 'main_gate' to compare the current bbox center with prior positions.
+
+Action: query_track_positions
+Action Input: 'main_gate'
+No prior positions at this location.The current frame shows a person entering the main gate, and since there are no prior positions recorded at this location, this is a new observation.
+
+                                                   Action: log_event
+Action Input: "Frame 17: A person is seen entering the main gate, identified as a new entry with no prior positions recorded."
+Logged: Frame 17: A person is seen entering the main gate, identified as a new entry with no prior positions recorded."                                                                                                                     I have logged the observation for Frame 17, noting that a person is entering the main gate and this is a new entry with no prior positions recorded.
+
+Final Answer: A person was observed entering the main gate as a new entry with no prior positions.
+                    > Finished chain.
+    Agent: A person was observed entering the main gate as a new entry with no prior positions.
+  Frame 018 (raw 036) → 1 object(s) detected
+    Objects  : ['person']                                                                                                 Desc     : surveillance photo of a man who was caught in a car                                                        Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)                                                                      Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will first use `query_track_positions` to fetch recent object centers at the 'main_gate' location to compare the current bbox center with prior positions.
+
+Action: query_track_positions                                                                                         Action Input: 'main_gate'  No prior positions at this location.The current detection is a new entry as there are no prior positions recorded at the 'main_gate' location.
+
+Action: log_event                                                                                                     Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+       > Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 019 (raw 038) → 1 object(s) detected
+    Objects  : []                                                                                                         Desc     : the suspect is seen in this surveillance image
+    Activity : clear | Threat: none                                                                                       Track   : track_001 (same object continuing, label person→unknown)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will first query the recent object positions at the 'main_gate' to compare the current bbox center with prior positions.
+
+                                                                                                                  Action: query_track_positions
+Action Input: 'main_gate'
+No prior positions at this location.The current bbox center indicates that the object is continuing to move through the scene, but the label has changed to "unknown." However, since there are no prior positions recorded at the 'main_gate', I will log this observation as a continuation of the same track despite the label change.
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, now labeled as unknown, identified as the same track from previous frames."                                                                                                   Logged: A person is continuing to enter the main gate, now labeled as unknown, identified as the same track from previous frames."
+I now have enough information.
+Final Answer: A person is continuing to enter the main gate, now labeled as unknown, identified as the same track from previous frames.
+                                                                                                     > Finished chain.
+    Agent: A person is continuing to enter the main gate, now labeled as unknown, identified as the same track from previous frames.
+  Frame 020 (raw 040) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : surveillance image of a man who was caught by a police officer
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing, label unknown→person)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")    The current frame shows a person continuing to enter the main gate, now labeled as a person again after being labeled as unknown in the previous frame. This is identified as the same track from previous frames.
+
+Action: query_track_positions                                                                                         Action Input: 'main_gate'  No prior positions at this location.The current frame shows a person continuing to enter the main gate, now labeled as a person again after being labeled as unknown in the previous frame. This is identified as the same track from previous frames.
+
+                                                                                 Action: log_event                                                                                                     Action Input: "A person is continuing to enter the main gate, now labeled as a person after being labeled as unknown in the previous frame."  Logged: A person is continuing to enter the main gate, now labeled as a person after being labeled as unknown in the previous frame.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, now labeled as a person after being labeled as unknown in the previous frame.
+> Finished chain.                                                                                                         Agent: A person is continuing to enter the main gate, now labeled as a person after being labeled as unknown in the previous frame.
+  Frame 021 (raw 042) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in this surveillance image                                                                   Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use query_track_positions to check the recent object centers at 'main_gate' to determine if the current detected person is the same as in previous frames.
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.The current detected person is a new entry since there are no prior positions recorded at the main gate.
+                                                                     Action: log_event
+Action Input: "A new person was detected entering the main gate with no prior positions recorded."  Logged: A new person was detected entering the main gate with no prior positions recorded.I now have enough information.
+Final Answer: A new person was detected entering the main gate with no prior positions recorded.
+                      > Finished chain.
+    Agent: A new person was detected entering the main gate with no prior positions recorded.                           Frame 022 (raw 044) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in a surveillance photo
+    Activity : entering | Threat: high
+    Track   : track_002 (new object #2)                                                                               Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check for recent object centers at the main gate to determine if the current detection is a continuation of a previous track or a new entry.
+
+                                                          Action: query_track_positions                                                                                         Action Input: "main_gate"  - Frame 21: center=(163.5, 279.0), objects=person, track=track_001
+- Frame 20: center=(150.5, 274.5), objects=person, track=track_001
+- Frame 19: center=(149.5, 273.5), objects=, track=track_001
+- Frame 18: center=(149.0, 264.0), objects=person, track=track_001                                                    - Frame 17: center=(149.5, 252.5), objects=person, track=track_001                                                    - Frame 16: center=(148.5, 247.5), objects=person, track=track_001The current frame shows a new person entering the main gate, with no prior positions recorded for this track_id (track_002).
+
+Action: log_event                                                                                                     Action Input: "A new person was detected entering the main gate with no prior positions recorded."  Logged: A new person was detected entering the main gate with no prior positions recorded.I have logged the observation of a new person entering the main gate with no prior positions recorded for this track.
+
+Final Answer: A new person was detected entering the main gate with no prior positions recorded.
+
+> Finished chain.
+    Agent: A new person was detected entering the main gate with no prior positions recorded.
+  Frame 023 (raw 046) → 2 object(s) detected                                                                              Objects  : ['person']
+    Desc     : a man walking down a street with a black umbrella; a man is seen in a surveillan
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")    I will use `query_track_positions` to check the recent object centers at the main gate to determine if the current detected person is the same as the previous frames or a new entry.
+
+Action: query_track_positions                                                                                         Action Input: "main_gate"  - Frame 22: center=(226.0, 303.0), objects=person, track=track_002                         - Frame 21: center=(163.5, 279.0), objects=person, track=track_001
+- Frame 20: center=(150.5, 274.5), objects=person, track=track_001
+- Frame 19: center=(149.5, 273.5), objects=, track=track_001
+- Frame 18: center=(149.0, 264.0), objects=person, track=track_001                                                    - Frame 17: center=(149.5, 252.5), objects=person, track=track_001The current detected person in Frame 23 has a center position of (173.0, 271.5) and is associated with track_id=track_001, which has been consistently tracked in previous frames. The trajectory shows plausible movement consistent with the previous positions, indicating that this is the same person continuing to enter the main gate.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.                                                                                                         Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 024 (raw 048) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : surveillance image of a man in a yellow shirt
+    Activity : entering | Threat: high
+    Track   : track_002 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check the recent object centers at 'main_gate' to determine if the current detection is the same moving object or a new one.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.The current detection is a new person entering the main gate, as there are no prior positions recorded for this location.
+
+Action: log_event
+Action Input: "A new person was detected entering the main gate with no prior positions recorded."  Logged: A new person was detected entering the main gate with no prior positions recorded.I have logged the observation of a new person entering the main gate with no prior positions recorded.
+
+                                                              Final Answer: A new person was detected entering the main gate with no prior positions recorded.
+
+> Finished chain.
+    Agent: A new person was detected entering the main gate with no prior positions recorded.                           Frame 025 (raw 050) → 1 object(s) detected                                                                              Objects  : ['person']
+    Desc     : surveillance photo of a man in a parking lot
+    Activity : entering | Threat: high                                                                                    Track   : track_002 (same object continuing)                                                                      Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a person continuing to enter the main gate, identified as the same track from previous frames.
+                                                                                                                      Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 026 (raw 052) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is walking down a sidewalk with a black umbrella
+    Activity : entering | Threat: high
+    Track   : track_002 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use query_track_positions to check the recent object centers at 'main_gate' to determine if the current detection is the same moving object or a new one.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.Since there are no prior positions recorded at the main gate, this indicates that the current detection is a genuinely new entry.
+
+Action: log_event
+Action Input: "A new person was detected entering the main gate with no prior positions recorded."  Logged: A new person was detected entering the main gate with no prior positions recorded.I have logged the observation of a new person entering the main gate, as there were no prior positions recorded.
+
+Final Answer: A new person was detected entering the main gate with no prior positions recorded.
+
+> Finished chain.
+    Agent: A new person was detected entering the main gate with no prior positions recorded.
+  Frame 027 (raw 054) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : surveillance photo of a man in a yellow shirt
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a person continuing to enter the main gate, identified as the same track from previous frames despite a significant center distance.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.The current frame shows a person continuing to enter the main gate, but there are no prior positions recorded at this location, indicating a potential new entry despite the same track ID.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames, but no prior positions were recorded at this location."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames, but no prior positions were recorded at this location.I have logged the observation regarding the person entering the main gate, noting the lack of prior positions despite the same track ID.
+
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames, but no prior positions were recorded at this location.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames, but no prior positions were recorded at this location.
+  Frame 028 (raw 056) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in a surveillance photo
+    Activity : entering | Threat: high
+    Track   : track_002 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check the recent object centers at the main gate to determine if the current detected person is the same as previous frames or a new entry.
+
+Action: query_track_positions
+Action Input: "main_gate"  - Frame 27: center=(242.5, 296.0), objects=person, track=track_001
+- Frame 26: center=(267.5, 268.0), objects=person, track=track_002
+- Frame 25: center=(260.5, 293.5), objects=person, track=track_002
+- Frame 24: center=(257.0, 302.0), objects=person, track=track_002
+- Frame 23: center=(173.0, 271.5), objects=person, track=track_001
+- Frame 22: center=(226.0, 303.0), objects=person, track=track_002The current detected person at frame 28 has a center position of (236.0, 253.0) and is associated with track_id=track_002. The previous positions for track_002 show centers of (267.5, 268.0), (260.5, 293.5), (257.0, 302.0), and (226.0, 303.0). The movement is consistent with the trajectory of track_002, indicating that this is the same person continuing to enter the main gate.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 029 (raw 058) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in a surveillance photo
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check the recent object centers at the main gate to determine if the current detection is the same moving object as in previous frames.
+
+Action: query_track_positions
+Action Input: "main_gate"  - Frame 28: center=(236.0, 253.0), objects=person, track=track_002
+- Frame 27: center=(242.5, 296.0), objects=person, track=track_001
+- Frame 26: center=(267.5, 268.0), objects=person, track=track_002
+- Frame 25: center=(260.5, 293.5), objects=person, track=track_002
+- Frame 24: center=(257.0, 302.0), objects=person, track=track_002
+- Frame 23: center=(173.0, 271.5), objects=person, track=track_001The current bbox center (233.0, 280.0) is consistent with the trajectory of track_001, which has been identified as the same person moving through the scene. The distance and direction of movement are plausible, confirming it as a continuing track.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I have confirmed that the current detection is the same person continuing to enter the main gate, consistent with previous frames.
+
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 030 (raw 060) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in this surveillance image
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a person continuing to enter the main gate, identified as the same track from previous frames.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.The current frame shows a person continuing to enter the main gate, but there are no prior positions recorded at this location, indicating that this is a new entry despite being on the same track.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, but no prior positions were recorded at this location."  Logged: A person is continuing to enter the main gate, but no prior positions were recorded at this location.I now have enough information.
+Final Answer: A person is continuing to enter the main gate, but no prior positions were recorded at this location.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, but no prior positions were recorded at this location.
+  Frame 031 (raw 062) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in this surveillance image
+    Activity : entering | Threat: high
+    Track   : track_001 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check for recent object centers at the main gate to determine if the current detected person is the same as previous frames.
+
+Action: query_track_positions
+Action Input: "main_gate"  - Frame 30: center=(261.0, 293.0), objects=person, track=track_001
+- Frame 29: center=(233.0, 280.0), objects=person, track=track_001
+- Frame 28: center=(236.0, 253.0), objects=person, track=track_002
+- Frame 27: center=(242.5, 296.0), objects=person, track=track_001
+- Frame 26: center=(267.5, 268.0), objects=person, track=track_002
+- Frame 25: center=(260.5, 293.5), objects=person, track=track_002The current detected person at frame 31 is identified as the same individual continuing from previous frames, specifically from track_001, as the movement direction and distance are consistent with prior positions.
+
+Action: log_event
+Action Input: "A person is continuing to enter the main gate, identified as the same track from previous frames."  Logged: A person is continuing to enter the main gate, identified as the same track from previous frames.I have confirmed that the detected person in frame 31 is the same individual continuing from previous frames, and I have logged this observation.
+
+Final Answer: A person is continuing to enter the main gate, identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to enter the main gate, identified as the same track from previous frames.
+  Frame 032 (raw 064) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is seen in a surveillance photo
+    Activity : entering | Threat: high
+    Track   : track_002 (same object continuing)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a person entering the main gate, and the motion tracking indicates that this is a continuing track. However, the center distance of 128.3px exceeds the maximum threshold of 150.0px, which raises a concern about the plausibility of this being the same object. I will query the recent object positions to confirm if this is indeed the same person or a new entry.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.Since there are no prior positions recorded at the main gate for this object, I will log this observation as a new entry despite the motion tracking indicating it is continuing.
+
+Action: log_event
+Action Input: "A person is entering the main gate, identified as a new entry with no prior positions recorded."  Logged: A person is entering the main gate, identified as a new entry with no prior positions recorded.I now have enough information.
+Final Answer: A person is entering the main gate, identified as a new entry with no prior positions recorded.
+
+> Finished chain.
+    Agent: A person is entering the main gate, identified as a new entry with no prior positions recorded.
+  Frame 033 (raw 066) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man is sitting on the floor in front of a door
+    Activity : stationary | Threat: high
+    Track   : track_003 (new object #3)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a person who is stationary and has a new track ID, indicating that this is a new entry with no prior positions recorded at the location.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.I have confirmed that there are no prior positions recorded for this new entry at the main gate.
+
+Action: log_event
+Action Input: "A person is sitting on the floor in front of a door at the main gate, identified as a new entry with no prior positions recorded."  Logged: A person is sitting on the floor in front of a door at the main gate, identified as a new entry with no prior positions recorded.I now have enough information.
+Final Answer: A person is sitting on the floor in front of a door at the main gate, identified as a new entry with no prior positions recorded.
+
+> Finished chain.
+    Agent: A person is sitting on the floor in front of a door at the main gate, identified as a new entry with no prior positions recorded.
+  Frame 034 (raw 068) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man in a hat is sitting on the floor
+    Activity : stationary | Threat: high
+    Track   : track_004 (new object #4)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The current frame shows a new person sitting on the floor at the main gate, identified as a new entry with no prior positions recorded.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.The current frame shows a new person sitting on the floor at the main gate, identified as a new entry with no prior positions recorded.
+
+Action: log_event
+Action Input: "A new person in a hat is sitting on the floor at the main gate, with no prior positions recorded."  Logged: A new person in a hat is sitting on the floor at the main gate, with no prior positions recorded.I now have enough information.
+Final Answer: A new person in a hat is sitting on the floor at the main gate, with no prior positions recorded.
+
+> Finished chain.
+    Agent: A new person in a hat is sitting on the floor at the main gate, with no prior positions recorded.
+  Frame 035 (raw 070) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man in a hat is seen in a surveillance video
+    Activity : entering | Threat: high
+    Track   : track_005 (new object #5)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+A new person in a hat is entering the main gate, with no prior positions recorded at this location.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.I have confirmed that there are no prior positions recorded at the main gate for this new entry.
+
+Action: log_event
+Action Input: "A new person in a hat is entering the main gate, with no prior positions recorded at this location."  Logged: A new person in a hat is entering the main gate, with no prior positions recorded at this location.I have logged the observation of a new person in a hat entering the main gate, confirming there are no prior positions recorded at this location.
+
+Final Answer: A new person in a hat is entering the main gate, with no prior positions recorded at this location.
+
+> Finished chain.
+    Agent: A new person in a hat is entering the main gate, with no prior positions recorded at this location.
+  Frame 036 (raw 072) → 1 object(s) detected
+    Objects  : ['person']
+    Desc     : a man wearing a hat
+    Activity : entering | Threat: high
+    Track   : track_006 (new object #6)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check for any recent object centers at the main gate to determine if the current detection is a continuation of a previous track or a new entry.
+
+Action: query_track_positions
+Action Input: 'main_gate'  No prior positions at this location.Since there are no prior positions recorded at the main gate, this is identified as a new entry.
+
+Action: log_event
+Action Input: "A new person wearing a hat is entering the main gate, with no prior positions recorded at this location."  Logged: A new person wearing a hat is entering the main gate, with no prior positions recorded at this location.I now have enough information.
+Final Answer: A new person wearing a hat is entering the main gate, with no prior positions recorded at this location.
+
+> Finished chain.
+    Agent: A new person wearing a hat is entering the main gate, with no prior positions recorded at this location.
+  Frame 037 (raw 074) → no foreground, skipping
+  Frame 038 (raw 076) → no foreground, skipping
+  Frame 039 (raw 078) → 1 object(s) detected
+    Objects  : []
+    Desc     : a small room with a small window and a small window
+    Activity : clear | Threat: none
+    Track   : track_006 (same object continuing, label person→unknown)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+The object is continuing to move through the scene, identified as the same track from previous frames, but the label has changed to "unknown." I will log this observation.
+
+Action: log_event
+Action Input: "A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames."
+Logged: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames."
+I now have enough information.
+Final Answer: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames.
+  Frame 040 (raw 080) → 1 object(s) detected
+    Objects  : []
+    Desc     : a small window with a small window on the side
+    Activity : clear | Threat: none
+    Track   : track_007 (new object #1)
+Error in StdOutCallbackHandler.on_chain_start callback: AttributeError("'NoneType' object has no attribute 'get'")
+I will use `query_track_positions` to check for recent object centers at the main gate to determine if the current detection is a continuation of a previous object or a new entry.
+
+Action: query_track_positions
+Action Input: "main_gate"  - Frame 39: center=(759.0, 376.0), objects=, track=track_006
+- Frame 36: center=(654.0, 389.0), objects=person, track=track_006
+- Frame 35: center=(507.5, 360.0), objects=person, track=track_005
+- Frame 34: center=(404.0, 360.0), objects=person, track=track_004
+- Frame 33: center=(354.0, 360.0), objects=person, track=track_003
+- Frame 32: center=(299.5, 364.5), objects=person, track=track_002The current frame shows a new entry labeled as "unknown" with no prior positions recorded at the main gate. The previous track (track_006) was a person, but now it is labeled as unknown. Since the object is continuing from the last known position but has changed its label, I will log this observation.
+
+Action: log_event
+Action Input: "A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames."  Logged: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames.I now have enough information.
+Final Answer: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames.
+
+> Finished chain.
+    Agent: A person is continuing to move through the main gate, now labeled as unknown, but identified as the same track from previous frames.
+  Frame 041 (raw 082) → no foreground, skipping
+
+============================================================
+  ALERTS (0 triggered)
+============================================================
+  No alerts triggered.
+
+============================================================
+  EVENT LOG (48 events in SQLite)
+============================================================
+  [LOW   ] Frame 0 | Frame 14: A new person was detected entering the main gate with n
+  [HIGH  ] Frame 14 | a man is seen in this surveillance image [main_gate, 2026-06-10T2
+  [LOW   ] Frame 0 | Frame 16: A person is continuing to enter the main gate, identifi
+  [HIGH  ] Frame 16 | a man is seen in this surveillance image [main_gate, 2026-06-10T2
+  [LOW   ] Frame 0 | Frame 17: A person is seen entering the main gate, identified as
+  [HIGH  ] Frame 17 | surveillance photo of a man who was caught in a parking lot in th
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 18 | surveillance photo of a man who was caught in a car [main_gate, 2
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, now labeled as unk
+  [LOW   ] Frame 19 | the suspect is seen in this surveillance image [main_gate, 2026-0
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, now labeled as a p
+  [HIGH  ] Frame 20 | surveillance image of a man who was caught by a police officer [m
+  [LOW   ] Frame 0 | A new person was detected entering the main gate with no prior po
+  [HIGH  ] Frame 21 | a man is seen in this surveillance image [main_gate, 2026-06-10T2
+  [LOW   ] Frame 0 | A new person was detected entering the main gate with no prior po
+  [HIGH  ] Frame 22 | a man is seen in a surveillance photo [main_gate, 2026-06-10T20:0
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 23 | a man walking down a street with a black umbrella; a man is seen
+  [LOW   ] Frame 0 | A new person was detected entering the main gate with no prior po
+  [HIGH  ] Frame 24 | surveillance image of a man in a yellow shirt [main_gate, 2026-06
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 25 | surveillance photo of a man in a parking lot [main_gate, 2026-06-
+  [LOW   ] Frame 0 | A new person was detected entering the main gate with no prior po
+  [HIGH  ] Frame 26 | a man is walking down a sidewalk with a black umbrella [main_gate
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 27 | surveillance photo of a man in a yellow shirt [main_gate, 2026-06
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 28 | a man is seen in a surveillance photo [main_gate, 2026-06-10T20:0
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 29 | a man is seen in a surveillance photo [main_gate, 2026-06-10T20:0
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, but no prior posit
+  [HIGH  ] Frame 30 | a man is seen in this surveillance image [main_gate, 2026-06-10T2
+  [LOW   ] Frame 0 | A person is continuing to enter the main gate, identified as the
+  [HIGH  ] Frame 31 | a man is seen in this surveillance image [main_gate, 2026-06-10T2
+  [LOW   ] Frame 0 | A person is entering the main gate, identified as a new entry wit
+  [HIGH  ] Frame 32 | a man is seen in a surveillance photo [main_gate, 2026-06-10T20:0
+  [LOW   ] Frame 0 | A person is sitting on the floor in front of a door at the main g
+  [HIGH  ] Frame 33 | a man is sitting on the floor in front of a door [main_gate, 2026
+  [LOW   ] Frame 0 | A new person in a hat is sitting on the floor at the main gate, w
+  [HIGH  ] Frame 34 | a man in a hat is sitting on the floor [main_gate, 2026-06-10T20:
+  [LOW   ] Frame 0 | A new person in a hat is entering the main gate, with no prior po
+  [HIGH  ] Frame 35 | a man in a hat is seen in a surveillance video [main_gate, 2026-0
+  [LOW   ] Frame 0 | A new person wearing a hat is entering the main gate, with no pri
+  [HIGH  ] Frame 36 | a man wearing a hat [main_gate, 2026-06-10T20:09:10+00:00]
+  [LOW   ] Frame 0 | A person is continuing to move through the main gate, now labeled
+  [LOW   ] Frame 39 | a small room with a small window and a small window [main_gate, 2
+  [LOW   ] Frame 0 | A person is continuing to move through the main gate, now labeled
+  [LOW   ] Frame 40 | a small window with a small window on the side [main_gate, 2026-0
+
+============================================================
+  FRAME INDEX (24 frames in ChromaDB)
+============================================================
+
+  Query: "person walking"
+    [score=0.49] Frame 26 | a man is walking down a sidewalk with a black umbrella
+    [score=0.409] Frame 23 | a man walking down a street with a black umbrella; a man is
+
+  Query: "vehicle entering"
+    [score=0.364] Frame 18 | surveillance photo of a man who was caught in a car
+    [score=0.271] Frame 25 | surveillance photo of a man in a parking lot
+
+  Query: "person at door"
+    [score=0.607] Frame 33 | a man is sitting on the floor in front of a door
+    [score=0.302] Frame 40 | a small window with a small window on the side
+
+============================================================
+  SESSION COMPLETE — 24 frames analyzed
+============================================================
+
+Query interface ready. Type a question or 'quit' to exit.
+Examples: 'show all truck events' | 'any alerts?' | 'activity at main gate'
+
+> How many men were detected ?
+  Frame 19 | 2026-06-10T20:08 (score=0.297)
+    the suspect is seen in this surveillance image
+  Frame 14 | 2026-06-10T20:07 (score=0.292)
+    a man is seen in this surveillance image
+  Frame 21 | 2026-06-10T20:08 (score=0.292)
+    a man is seen in this surveillance image
+  Frame 30 | 2026-06-10T20:09 (score=0.292)
+    a man is seen in this surveillance image
+  Frame 31 | 2026-06-10T20:09 (score=0.292)
+    a man is seen in this surveillance image
+
+>
