@@ -11,6 +11,8 @@ from agent.alert_rules import AlertRulesEngine, threat_from_alerts
 from agent.security_agent import SecurityAgent
 from notifications.telegram_notifier import send_alert as telegram_alert
 from agent.vehicle_context import primary_crop_bbox, primary_crop_color, track_to_context
+from blockchain.evidence import build_alert_evidence
+from blockchain.monad_client import MonadEvidenceClient
 from config import SAMPLE_EVERY_N_FRAMES, MOG2_WARMUP_FRAMES
 from data.simulated_frames import FrameAnalysis
 from data.telemetry import battery_for_frame, get_telemetry
@@ -53,6 +55,7 @@ class VideoProcessor:
         index: FrameIndex,
         rules: AlertRulesEngine,
         agent: Optional[SecurityAgent] = None,
+        evidence_client: Optional[MonadEvidenceClient] = None,
         location: str = "main_gate",
         sample_every_n: int = SAMPLE_EVERY_N_FRAMES,
     ):
@@ -60,6 +63,7 @@ class VideoProcessor:
         self._index = index
         self._rules = rules
         self._agent = agent
+        self._evidence_client = evidence_client or MonadEvidenceClient()
         self._location = location
         self._sample_every_n = sample_every_n
 
@@ -219,6 +223,7 @@ class VideoProcessor:
                 },
             )
 
+            track = self._rules.last_track_update
             for alert in alerts:
                 self._store.log_alert(
                     frame_id, alert.rule_id, alert.message, alert.severity
@@ -249,8 +254,34 @@ class VideoProcessor:
                     severity=alert.severity,
                     rule_id=alert.rule_id,
                 )
+                evidence = build_alert_evidence(
+                    frame_id=frame_id,
+                    timestamp=timestamp,
+                    location=self._location,
+                    rule_id=alert.rule_id,
+                    severity=alert.severity,
+                    message=alert.message,
+                    description=vlm_result.raw_description,
+                    objects=vlm_result.objects,
+                    bbox=crop_bbox,
+                    track_id=track.track_id if track else None,
+                )
+                anchor_result = self._evidence_client.anchor(evidence)
+                self._store.log_evidence_anchor(
+                    frame_id=frame_id,
+                    evidence_hash=anchor_result.evidence_hash,
+                    tx_hash=anchor_result.tx_hash,
+                    status=anchor_result.status,
+                    message=anchor_result.message,
+                )
+                anchor_line = (
+                    f"Monad evidence: {anchor_result.status} "
+                    f"{anchor_result.evidence_hash[:14]}..."
+                )
+                if anchor_result.tx_hash:
+                    anchor_line += f" tx={anchor_result.tx_hash[:14]}..."
+                frame_logs.append(anchor_line)
 
-            track = self._rules.last_track_update
             vehicle_context = None
             if track is not None:
                 vehicle_context = track_to_context(track)
@@ -336,5 +367,6 @@ class VideoProcessor:
                 "alert_count": len(self._store.get_alerts()),
                 "event_count": len(self._store.get_all_events()),
                 "index_count": self._index.count(),
+                "evidence_anchor_count": len(self._store.get_evidence_anchors()),
             },
         )

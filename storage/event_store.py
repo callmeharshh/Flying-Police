@@ -31,6 +31,17 @@ class EventStore:
                 severity   TEXT,
                 FOREIGN KEY (event_id) REFERENCES events(event_id)
             );
+            CREATE TABLE IF NOT EXISTS evidence_anchors (
+                anchor_id     TEXT PRIMARY KEY,
+                event_id      TEXT,
+                frame_id      INTEGER,
+                timestamp     TEXT,
+                evidence_hash TEXT,
+                tx_hash       TEXT,
+                status        TEXT,
+                message       TEXT,
+                FOREIGN KEY (event_id) REFERENCES events(event_id)
+            );
         """)
         self._conn.commit()
 
@@ -55,6 +66,24 @@ class EventStore:
         self._conn.commit()
         return alert_id
 
+    def log_evidence_anchor(
+        self,
+        frame_id: int,
+        evidence_hash: str,
+        status: str,
+        message: str = "",
+        tx_hash: Optional[str] = None,
+        event_id: Optional[str] = None,
+    ) -> str:
+        anchor_id = f"anch_{uuid.uuid4().hex[:8]}"
+        timestamp = datetime.utcnow().isoformat()
+        self._conn.execute(
+            "INSERT INTO evidence_anchors VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (anchor_id, event_id, frame_id, timestamp, evidence_hash, tx_hash, status, message),
+        )
+        self._conn.commit()
+        return anchor_id
+
     def get_alerts(self, severity: Optional[str] = None) -> List[dict]:
         if severity:
             rows = self._conn.execute(
@@ -73,6 +102,10 @@ class EventStore:
 
     def get_all_events(self) -> List[dict]:
         rows = self._conn.execute("SELECT * FROM events ORDER BY timestamp").fetchall()
+        return [dict(r) for r in rows]
+
+    def get_evidence_anchors(self) -> List[dict]:
+        rows = self._conn.execute("SELECT * FROM evidence_anchors ORDER BY timestamp").fetchall()
         return [dict(r) for r in rows]
 
     def close(self):

@@ -28,6 +28,14 @@ data/validation_fixtures/_capture_chroma/
 # Test output
 blip_output.txt
 
+# Node / Hardhat
+node_modules/
+
+# Hardhat build output and local sandbox home
+artifacts/
+cache/
+.hardhat-home/
+
 # Secrets
 .env
 

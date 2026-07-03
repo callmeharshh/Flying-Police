@@ -18,7 +18,14 @@ from dotenv import load_dotenv
 
 from agent.alert_rules import AlertRulesEngine
 from agent.security_agent import SecurityAgent
-from config import LOCATIONS
+from config import (
+    EVIDENCE_REGISTRY_ADDRESS,
+    LOCATIONS,
+    MONAD_CHAIN_ID,
+    MONAD_EXPLORER_TX_URL,
+    MONAD_PRIVATE_KEY,
+    MONAD_RPC_URL,
+)
 from pipeline.session import create_session_id, reset_session, save_upload
 from pipeline.video_processor import VideoProcessor
 from query.query_engine import QueryEngine
@@ -36,6 +43,11 @@ ALERT_SEVERITY_COLORS = {
 STATUS_LABELS = {
     "detected": "Motion detected — object analyzed",
     "empty": "Motion detected — BLIP returned no result",
+}
+ANCHOR_STATUS_COLORS = {
+    "anchored": "#16a34a",
+    "not_configured": "#ca8a04",
+    "error": "#dc2626",
 }
 
 
@@ -116,6 +128,66 @@ def _render_alert_feed(alerts_slot) -> None:
                 _render_alert_card(alert)
         else:
             st.text("Alerts from the whole session appear here.")
+
+
+def _short_hash(value: str | None, *, length: int = 10) -> str:
+    if not value:
+        return "—"
+    if len(value) <= length * 2:
+        return value
+    return f"{value[:length]}…{value[-length:]}"
+
+
+def _tx_url(tx_hash: str | None) -> str | None:
+    if not tx_hash or not MONAD_EXPLORER_TX_URL:
+        return None
+    return f"{MONAD_EXPLORER_TX_URL.rstrip('/')}/{tx_hash}"
+
+
+def _render_monad_status() -> None:
+    configured = bool(
+        MONAD_RPC_URL and MONAD_CHAIN_ID and MONAD_PRIVATE_KEY and EVIDENCE_REGISTRY_ADDRESS
+    )
+    label = "Ready for live anchoring" if configured else "Local proof mode"
+    st.caption(
+        f"Monad: {label} · chain {MONAD_CHAIN_ID or '—'} · "
+        f"contract {_short_hash(EVIDENCE_REGISTRY_ADDRESS)}"
+    )
+
+
+def _render_evidence_receipts(store: EventStore | None) -> None:
+    st.subheader("Monad Evidence Receipts")
+    _render_monad_status()
+    if store is None:
+        st.caption("Run a session to generate evidence receipts.")
+        return
+
+    anchors = store.get_evidence_anchors()
+    if not anchors:
+        st.caption("No alert evidence has been generated yet.")
+        return
+
+    anchored_count = sum(1 for item in anchors if item["status"] == "anchored")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Receipts", len(anchors))
+    c2.metric("On-chain", anchored_count)
+    c3.metric("Pending/local", len(anchors) - anchored_count)
+
+    for anchor in reversed(anchors[-8:]):
+        color = ANCHOR_STATUS_COLORS.get(anchor["status"], "#64748b")
+        tx_url = _tx_url(anchor.get("tx_hash"))
+        with st.container(border=True):
+            st.markdown(
+                f"<span style='background:{color};color:white;padding:2px 8px;"
+                f"border-radius:4px;font-size:0.75rem;'>{anchor['status'].upper()}</span> "
+                f"**Frame {anchor['frame_id']}**",
+                unsafe_allow_html=True,
+            )
+            st.code(anchor["evidence_hash"], language=None)
+            if tx_url:
+                st.link_button("Open transaction", tx_url)
+            elif anchor.get("message"):
+                st.caption(anchor["message"])
 
 
 def _run_pipeline(
@@ -248,6 +320,7 @@ def main() -> None:
     with st.sidebar:
         st.header("Settings")
         location = st.selectbox("Location", LOCATIONS, index=0)
+        _render_monad_status()
         has_api_key = bool(os.getenv("OPENAI_API_KEY"))
         use_agent = st.checkbox(
             "Enable LangChain agent",
@@ -312,11 +385,15 @@ def main() -> None:
 
     if st.session_state.processing_complete and st.session_state.stats:
         stats = st.session_state.stats
-        m1, m2, m3, m4 = st.columns(4)
+        m1, m2, m3, m4, m5 = st.columns(5)
         m1.metric("Frames analyzed", stats.get("processed_count", 0))
         m2.metric("Alerts", stats.get("alert_count", 0))
         m3.metric("Events logged", stats.get("event_count", 0))
         m4.metric("Indexed frames", stats.get("index_count", 0))
+        m5.metric("Monad anchors", stats.get("evidence_anchor_count", 0))
+
+        st.divider()
+        _render_evidence_receipts(st.session_state.store)
 
         st.divider()
         st.subheader("Ask about this session")

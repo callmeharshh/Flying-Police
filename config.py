@@ -46,6 +46,13 @@ KNOWN_VEHICLES = ["blue ford f150", "blue truck"]
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
+# Monad evidence anchoring (optional — leave blank to run fully local)
+MONAD_RPC_URL = os.getenv("MONAD_RPC_URL", "")
+MONAD_CHAIN_ID = int(os.getenv("MONAD_CHAIN_ID", "0") or "0")
+MONAD_PRIVATE_KEY = os.getenv("MONAD_PRIVATE_KEY", "")
+EVIDENCE_REGISTRY_ADDRESS = os.getenv("EVIDENCE_REGISTRY_ADDRESS", "")
+MONAD_EXPLORER_TX_URL = os.getenv("MONAD_EXPLORER_TX_URL", "")
+
 # Alert thresholds
 LOITER_THRESHOLD_SECONDS = 15    # RULE-04: 15 seconds (testing); change to 300 for production
 REPEAT_ENTRY_LIMIT = 1           # RULE-03: alert if > this count (fires on 2nd+ entry)
