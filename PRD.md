@@ -1,5 +1,5 @@
 # Product Requirements Document
-## Drone Security Analyst Agent
+## Flying Police
 
 **Version:** 1.0  
 **Date:** 2026-06-09  
@@ -11,7 +11,7 @@
 
 ### 1.1 Product Summary
 
-The Drone Security Analyst Agent is an AI-powered security monitoring system for a fixed property. A docked drone captures video footage daily. The system processes that footage frame-by-frame, identifies objects and events, generates alerts for security threats, and maintains a searchable index of all activity.
+Flying Police is an AI-powered security monitoring system for a fixed property. A docked drone captures video footage daily. The system processes that footage frame-by-frame, identifies objects and events, generates alerts for security threats, and maintains a searchable index of all activity.
 
 ### 1.2 Problem Being Solved
 
@@ -220,7 +220,7 @@ Users can query the index using natural language:
 
 ```
 ```
-Flying-CCTV/
+Flying-Police/
 ├── main.py                        # Entry point
 ├── config.py                      # Config and constants
 ├── data/

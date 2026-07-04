@@ -1,4 +1,4 @@
-"""Generate architecture PPT for Drone Security Analyst Agent."""
+"""Generate architecture PPT for Flying Police."""
 import os
 import sys
 
@@ -122,7 +122,7 @@ def slide_title(prs):
     # Accent bar
     add_rect(slide, 0, 3.2, 13.33, 0.06, ACCENT_BLUE)
 
-    add_text_box(slide, "DRONE SECURITY ANALYST AGENT",
+    add_text_box(slide, "FLYING POLICE",
                  0.5, 1.8, 12.33, 1.0,
                  font_size=Pt(36), bold=True, color=WHITE)
     add_text_box(slide, "System Architecture & Component Overview",
@@ -147,7 +147,7 @@ def slide_title(prs):
         add_text_box(slide, label, px, 4.42, w, 0.32, font_size=Pt(9.5), color=color)
         px += w + 0.18
 
-    add_text_box(slide, "FlytBase AI Engineer Assignment", 0.5, 6.8, 12.33, 0.4,
+    add_text_box(slide, "github.com/callmeharshh/Flying-Police", 0.5, 6.8, 12.33, 0.4,
                  font_size=Pt(10), color=GREY)
 
 
@@ -521,7 +521,7 @@ def build():
     slide_agent(prs)
     slide_telegram(prs)
 
-    out = os.path.join(PROJECT_ROOT, "Drone_Security_Agent_Architecture.pptx")
+    out = os.path.join(PROJECT_ROOT, "Flying_Police_Architecture.pptx")
     prs.save(out)
     print(f"Saved: {out}")
 

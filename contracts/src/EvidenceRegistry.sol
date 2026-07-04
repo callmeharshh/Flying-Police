@@ -2,27 +2,22 @@
 pragma solidity ^0.8.24;
 
 /// @title EvidenceRegistry
-/// @notice Tamper-proof anchoring of Air-Secure drone security evidence on Monad.
-///         Each alert/event is hashed off-chain (keccak256 over a canonical JSON
-///         representation) and the hash is anchored here with minimal metadata.
-///         The chain provides an immutable, timestamped, independently-verifiable
-///         record — anyone holding the original evidence can prove it existed at a
-///         given time and has not been altered.
-/// @dev    Writes are owner-gated (only the drone operator's signer key can anchor).
-///         Reads are public. Monad's high throughput + low fees make anchoring
-///         high-frequency drone events economically practical, unlike Ethereum L1.
+/// @notice Tamper-proof anchoring of Flying Police drone security evidence on Monad.
+///         Full evidence JSON is stored on IPFS (Lighthouse). The keccak256 hash,
+///         frameId, location, message, and IPFS CID are anchored on-chain.
 contract EvidenceRegistry {
     struct Record {
-        uint64 anchoredAt; // block.timestamp when anchored (0 => never anchored)
-        uint64 frameId;    // source frame id from the perception pipeline
-        uint8 severity;    // 0=low, 1=medium, 2=high
+        uint64 anchoredAt;
+        uint64 frameId;
+        uint8 severity;
         address anchoredBy;
+        string location;
+        string message;
+        string ipfsCid;
     }
 
     address public owner;
 
-    /// @dev evidenceHash => Record. First write wins; re-anchoring is rejected so
-    ///      the original timestamp is authoritative.
     mapping(bytes32 => Record) private _records;
 
     uint256 public totalAnchored;
@@ -32,7 +27,10 @@ contract EvidenceRegistry {
         uint64 indexed frameId,
         uint8 severity,
         uint64 anchoredAt,
-        address indexed anchoredBy
+        address indexed anchoredBy,
+        string location,
+        string message,
+        string ipfsCid
     );
 
     event OwnershipTransferred(address indexed from, address indexed to);
@@ -52,50 +50,80 @@ contract EvidenceRegistry {
         emit OwnershipTransferred(address(0), msg.sender);
     }
 
-    /// @notice Anchor a single piece of evidence.
-    function anchor(bytes32 evidenceHash, uint64 frameId, uint8 severity) external onlyOwner {
-        _anchor(evidenceHash, frameId, severity);
+    /// @notice Anchor evidence with on-chain metadata and an IPFS content id.
+    function anchor(
+        bytes32 evidenceHash,
+        uint64 frameId,
+        uint8 severity,
+        string calldata location,
+        string calldata message,
+        string calldata ipfsCid
+    ) external onlyOwner {
+        _anchor(evidenceHash, frameId, severity, location, message, ipfsCid);
     }
 
     /// @notice Anchor many pieces of evidence in one transaction.
-    /// @dev The Monad-native efficiency path: buffer alerts and flush as a batch.
     function batchAnchor(
         bytes32[] calldata evidenceHashes,
         uint64[] calldata frameIds,
-        uint8[] calldata severities
+        uint8[] calldata severities,
+        string[] calldata locations,
+        string[] calldata messages,
+        string[] calldata ipfsCids
     ) external onlyOwner {
-        if (evidenceHashes.length != frameIds.length || frameIds.length != severities.length) {
+        if (
+            evidenceHashes.length != frameIds.length
+                || frameIds.length != severities.length
+                || severities.length != locations.length
+                || locations.length != messages.length
+                || messages.length != ipfsCids.length
+        ) {
             revert LengthMismatch();
         }
         for (uint256 i = 0; i < evidenceHashes.length; i++) {
-            _anchor(evidenceHashes[i], frameIds[i], severities[i]);
+            _anchor(
+                evidenceHashes[i],
+                frameIds[i],
+                severities[i],
+                locations[i],
+                messages[i],
+                ipfsCids[i]
+            );
         }
     }
 
-    function _anchor(bytes32 evidenceHash, uint64 frameId, uint8 severity) private {
+    function _anchor(
+        bytes32 evidenceHash,
+        uint64 frameId,
+        uint8 severity,
+        string calldata location,
+        string calldata message,
+        string calldata ipfsCid
+    ) private {
         if (_records[evidenceHash].anchoredAt != 0) revert AlreadyAnchored(evidenceHash);
         uint64 ts = uint64(block.timestamp);
         _records[evidenceHash] = Record({
             anchoredAt: ts,
             frameId: frameId,
             severity: severity,
-            anchoredBy: msg.sender
+            anchoredBy: msg.sender,
+            location: location,
+            message: message,
+            ipfsCid: ipfsCid
         });
         unchecked {
             totalAnchored++;
         }
-        emit EvidenceAnchored(evidenceHash, frameId, severity, ts, msg.sender);
+        emit EvidenceAnchored(
+            evidenceHash, frameId, severity, ts, msg.sender, location, message, ipfsCid
+        );
     }
 
-    /// @notice Verify whether a hash was anchored, and when.
-    /// @return exists     true if the hash has been anchored
-    /// @return anchoredAt block timestamp of anchoring (0 if never)
     function verify(bytes32 evidenceHash) external view returns (bool exists, uint64 anchoredAt) {
         Record memory r = _records[evidenceHash];
         return (r.anchoredAt != 0, r.anchoredAt);
     }
 
-    /// @notice Full record for a hash (frameId/severity/anchoredBy alongside timestamp).
     function getRecord(bytes32 evidenceHash) external view returns (Record memory) {
         return _records[evidenceHash];
     }

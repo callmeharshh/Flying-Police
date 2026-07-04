@@ -31,7 +31,7 @@ class EvidencePayload:
 
     def to_dict(self) -> dict[str, Any]:
         payload = {
-            "schema": "airsecure.alert.v1",
+            "schema": "flying-police.alert.v1",
             "frame_id": self.frame_id,
             "timestamp": self.timestamp,
             "location": self.location,

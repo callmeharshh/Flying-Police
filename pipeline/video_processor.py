@@ -273,11 +273,16 @@ class VideoProcessor:
                     tx_hash=anchor_result.tx_hash,
                     status=anchor_result.status,
                     message=anchor_result.message,
+                    location=anchor_result.location,
+                    alert_message=anchor_result.alert_message,
+                    ipfs_cid=anchor_result.ipfs_cid,
                 )
                 anchor_line = (
                     f"Monad evidence: {anchor_result.status} "
                     f"{anchor_result.evidence_hash[:14]}..."
                 )
+                if anchor_result.ipfs_cid:
+                    anchor_line += f" ipfs={anchor_result.ipfs_cid[:14]}..."
                 if anchor_result.tx_hash:
                     anchor_line += f" tx={anchor_result.tx_hash[:14]}..."
                 frame_logs.append(anchor_line)

@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+load_dotenv(".env.local", override=True)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -52,6 +53,12 @@ MONAD_CHAIN_ID = int(os.getenv("MONAD_CHAIN_ID", "0") or "0")
 MONAD_PRIVATE_KEY = os.getenv("MONAD_PRIVATE_KEY", "")
 EVIDENCE_REGISTRY_ADDRESS = os.getenv("EVIDENCE_REGISTRY_ADDRESS", "")
 MONAD_EXPLORER_TX_URL = os.getenv("MONAD_EXPLORER_TX_URL", "")
+
+# Lighthouse IPFS evidence storage (optional — leave blank to skip IPFS upload)
+LIGHTHOUSE_API_KEY = os.getenv("LIGHTHOUSE_API_KEY", "") or os.getenv("LIGHTHOUSE_TOKEN", "")
+LIGHTHOUSE_UPLOAD_URL = "https://upload.lighthouse.storage/api/v0/add"
+LIGHTHOUSE_GATEWAY_URL = "https://gateway.lighthouse.storage/ipfs"
+LIGHTHOUSE_UPLOAD_TIMEOUT_SECONDS = 45
 
 # Alert thresholds
 LOITER_THRESHOLD_SECONDS = 15    # RULE-04: 15 seconds (testing); change to 300 for production

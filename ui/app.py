@@ -1,5 +1,5 @@
 """
-Drone Security Analyst — Web UI
+Flying Police — Web UI
 
 Run:
     streamlit run ui/app.py
@@ -20,6 +20,7 @@ from agent.alert_rules import AlertRulesEngine
 from agent.security_agent import SecurityAgent
 from config import (
     EVIDENCE_REGISTRY_ADDRESS,
+    LIGHTHOUSE_API_KEY,
     LOCATIONS,
     MONAD_CHAIN_ID,
     MONAD_EXPLORER_TX_URL,
@@ -47,6 +48,7 @@ STATUS_LABELS = {
 ANCHOR_STATUS_COLORS = {
     "anchored": "#16a34a",
     "not_configured": "#ca8a04",
+    "ipfs_error": "#ea580c",
     "error": "#dc2626",
 }
 
@@ -145,12 +147,14 @@ def _tx_url(tx_hash: str | None) -> str | None:
 
 
 def _render_monad_status() -> None:
-    configured = bool(
+    monad_configured = bool(
         MONAD_RPC_URL and MONAD_CHAIN_ID and MONAD_PRIVATE_KEY and EVIDENCE_REGISTRY_ADDRESS
     )
-    label = "Ready for live anchoring" if configured else "Local proof mode"
+    lighthouse_configured = bool(LIGHTHOUSE_API_KEY)
+    monad_label = "Ready for live anchoring" if monad_configured else "Local proof mode"
+    ipfs_label = "Lighthouse IPFS ready" if lighthouse_configured else "IPFS key missing"
     st.caption(
-        f"Monad: {label} · chain {MONAD_CHAIN_ID or '—'} · "
+        f"Monad: {monad_label} · {ipfs_label} · chain {MONAD_CHAIN_ID or '—'} · "
         f"contract {_short_hash(EVIDENCE_REGISTRY_ADDRESS)}"
     )
 
@@ -176,13 +180,16 @@ def _render_evidence_receipts(store: EventStore | None) -> None:
     for anchor in reversed(anchors[-8:]):
         color = ANCHOR_STATUS_COLORS.get(anchor["status"], "#64748b")
         tx_url = _tx_url(anchor.get("tx_hash"))
+        location = anchor.get("location") or "—"
+        alert_message = anchor.get("alert_message") or "—"
         with st.container(border=True):
             st.markdown(
                 f"<span style='background:{color};color:white;padding:2px 8px;"
                 f"border-radius:4px;font-size:0.75rem;'>{anchor['status'].upper()}</span> "
-                f"**Frame {anchor['frame_id']}**",
+                f"**Frame {anchor['frame_id']}** · **{location}**",
                 unsafe_allow_html=True,
             )
+            st.caption(alert_message)
             st.code(anchor["evidence_hash"], language=None)
             if tx_url:
                 st.link_button("Open transaction", tx_url)
@@ -308,13 +315,13 @@ def _run_pipeline(
 
 def main() -> None:
     st.set_page_config(
-        page_title="Drone Security Analyst",
+        page_title="Flying Police",
         page_icon="🛸",
         layout="wide",
     )
     _init_state()
 
-    st.title("Drone Security Analyst")
+    st.title("Flying Police")
     st.caption("Upload surveillance video · live frame analysis · alerts · Q&A")
 
     with st.sidebar:

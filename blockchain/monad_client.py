@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from blockchain.evidence import EvidencePayload
+from blockchain.lighthouse_client import LighthouseClient
 from config import (
     EVIDENCE_REGISTRY_ADDRESS,
     MONAD_CHAIN_ID,
@@ -20,6 +21,9 @@ EVIDENCE_REGISTRY_ABI = [
             {"internalType": "bytes32", "name": "evidenceHash", "type": "bytes32"},
             {"internalType": "uint64", "name": "frameId", "type": "uint64"},
             {"internalType": "uint8", "name": "severity", "type": "uint8"},
+            {"internalType": "string", "name": "location", "type": "string"},
+            {"internalType": "string", "name": "message", "type": "string"},
+            {"internalType": "string", "name": "ipfsCid", "type": "string"},
         ],
         "name": "anchor",
         "outputs": [],
@@ -46,6 +50,11 @@ class AnchorResult:
     tx_hash: Optional[str] = None
     explorer_url: Optional[str] = None
     message: str = ""
+    location: str = ""
+    alert_message: str = ""
+    frame_id: int = 0
+    ipfs_cid: Optional[str] = None
+    ipfs_gateway_url: Optional[str] = None
 
     @property
     def anchored(self) -> bool:
@@ -62,7 +71,7 @@ class VerifyResult:
 
 
 class MonadEvidenceClient:
-    """Thin wrapper around the deployed EvidenceRegistry contract."""
+    """Upload evidence to Lighthouse IPFS, then anchor metadata on Monad."""
 
     def __init__(
         self,
@@ -72,12 +81,14 @@ class MonadEvidenceClient:
         private_key: str = MONAD_PRIVATE_KEY,
         contract_address: str = EVIDENCE_REGISTRY_ADDRESS,
         explorer_tx_url: str = MONAD_EXPLORER_TX_URL,
+        lighthouse_client: Optional[LighthouseClient] = None,
     ):
         self.rpc_url = rpc_url
         self.chain_id = chain_id
         self.private_key = private_key
         self.contract_address = contract_address
         self.explorer_tx_url = explorer_tx_url
+        self._lighthouse = lighthouse_client or LighthouseClient()
         self._web3 = None
         self._account = None
         self._contract = None
@@ -92,14 +103,31 @@ class MonadEvidenceClient:
 
     def anchor(self, evidence: EvidencePayload) -> AnchorResult:
         evidence_hash = evidence.evidence_hash()
+        base_kwargs = {
+            "evidence_hash": evidence_hash,
+            "location": evidence.location,
+            "alert_message": evidence.message,
+            "frame_id": evidence.frame_id,
+        }
         if not self.is_configured():
             return AnchorResult(
                 status="not_configured",
-                evidence_hash=evidence_hash,
                 message=(
                     "Monad anchoring skipped — set MONAD_RPC_URL, MONAD_CHAIN_ID, "
                     "MONAD_PRIVATE_KEY, and EVIDENCE_REGISTRY_ADDRESS."
                 ),
+                **base_kwargs,
+            )
+
+        upload_result = self._lighthouse.upload_json(evidence.canonical_json())
+        ipfs_cid = upload_result.cid or ""
+        if not upload_result.uploaded:
+            return AnchorResult(
+                status="ipfs_error",
+                message=upload_result.message,
+                ipfs_cid=upload_result.cid,
+                ipfs_gateway_url=upload_result.gateway_url,
+                **base_kwargs,
             )
 
         try:
@@ -108,6 +136,9 @@ class MonadEvidenceClient:
                 bytes.fromhex(evidence_hash.removeprefix("0x")),
                 int(evidence.frame_id),
                 evidence.severity_value(),
+                evidence.location,
+                evidence.message,
+                ipfs_cid,
             ).build_transaction({
                 "from": self._account.address,
                 "nonce": self._web3.eth.get_transaction_count(self._account.address),
@@ -118,16 +149,20 @@ class MonadEvidenceClient:
             explorer_url = self._explorer_url(tx_hash)
             return AnchorResult(
                 status="anchored",
-                evidence_hash=evidence_hash,
                 tx_hash=tx_hash,
                 explorer_url=explorer_url,
-                message="Evidence anchored on Monad.",
+                message="Evidence uploaded to Lighthouse IPFS and anchored on Monad.",
+                ipfs_cid=ipfs_cid,
+                ipfs_gateway_url=upload_result.gateway_url,
+                **base_kwargs,
             )
         except Exception as exc:
             return AnchorResult(
                 status="error",
-                evidence_hash=evidence_hash,
                 message=f"Monad anchoring failed: {exc}",
+                ipfs_cid=ipfs_cid,
+                ipfs_gateway_url=upload_result.gateway_url,
+                **base_kwargs,
             )
 
     def verify(self, evidence: EvidencePayload) -> VerifyResult:
@@ -183,4 +218,3 @@ class MonadEvidenceClient:
         if not self.explorer_tx_url:
             return None
         return f"{self.explorer_tx_url.rstrip('/')}/{tx_hash}"
-

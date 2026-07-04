@@ -1,5 +1,5 @@
 """
-Drone Security Analyst Agent — CLI Entry Point
+Flying Police — CLI Entry Point
 """
 import os
 import shutil
@@ -43,7 +43,7 @@ def _print_event(event) -> None:
 
 
 def main():
-    print_section("DRONE SECURITY ANALYST AGENT")
+    print_section("FLYING POLICE")
 
     for path in [EVENTS_DB_PATH, CHROMA_DIR]:
         if os.path.exists(path):

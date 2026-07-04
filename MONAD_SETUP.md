@@ -1,6 +1,6 @@
 # Monad Integration Setup
 
-AirSecure can run fully offline. When Monad settings are present, every rule alert
+Flying Police can run fully offline. When Monad settings are present, every rule alert
 is converted into a canonical evidence payload, hashed, and anchored through
 `EvidenceRegistry`.
 
@@ -82,7 +82,7 @@ MONAD_EXPLORER_TX_URL=<explorer tx URL prefix, optional>
 Leave these blank during local development. The app will still generate evidence
 hashes and record `not_configured` anchor attempts in SQLite.
 
-## 3. Run AirSecure
+## 3. Run Flying Police
 
 ```sh
 streamlit run ui/app.py
@@ -103,7 +103,7 @@ Monad evidence: not_configured 0x123456789abc...
 
 ## 4. Demo Story
 
-1. AirSecure detects suspicious motion.
+1. Flying Police detects suspicious motion.
 2. Deterministic rules fire before any LLM reasoning.
 3. The alert becomes canonical JSON.
 4. The JSON hash is anchored on Monad.

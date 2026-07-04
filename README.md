@@ -1,10 +1,8 @@
-# Drone Security Analyst Agent
+# Flying Police
 
-A video surveillance analysis system that processes footage frame-by-frame, identifies objects and activities using a vision-language model, fires deterministic security alerts, and delivers real-time annotated notifications via Telegram.
+Flying Police is a video surveillance analysis system that processes footage frame-by-frame, identifies objects and activities using a vision-language model, fires deterministic security alerts, and delivers real-time annotated notifications via Telegram.
 
-Built for the FlytBase AI Engineer assignment.
-
-**Repository:** [github.com/Jayesh1512/Air-Secure](https://github.com/Jayesh1512/Air-Secure)
+**Repository:** [github.com/callmeharshh/Flying-Police](https://github.com/callmeharshh/Flying-Police)
 
 ---
 
@@ -302,7 +300,7 @@ End-to-end flow from video input through MOG2 motion detection, BLIP captioning,
 │   └── frame_index.py        # ChromaDB wrapper (vector index of BLIP captions)
 ├── tests/
 │   ├── unit/                 # Fast unit tests (no model or API calls)
-│   └── integration/          # BLIP + PS.md QA tests (optional)
+│   └── integration/          # BLIP + integration QA tests (optional)
 ├── scripts/
 │   ├── run_ui.sh                 # Start Streamlit web UI
 │   └── download_sample_videos.sh # Fetch C-MOR + YouTube test clips (macOS)
@@ -320,8 +318,8 @@ End-to-end flow from video input through MOG2 motion detection, BLIP captioning,
 ### 1. Clone and create a virtual environment
 
 ```bash
-git clone https://github.com/Jayesh1512/Flying-CCTV.git
-cd Flying-CCTV
+git clone https://github.com/callmeharshh/Flying-Police.git
+cd Flying-Police
 python3 -m venv venv
 source venv/bin/activate
 ```

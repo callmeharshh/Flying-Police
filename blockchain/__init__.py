@@ -1,2 +1,2 @@
-"""Monad integration helpers for AirSecure evidence anchoring."""
+"""Monad integration helpers for Flying Police evidence anchoring."""
 

@@ -1,6 +1,6 @@
 # Codex Practices For This Codebase
 
-This file captures how Codex should be used on Air Secure so future work stays
+This file captures how Codex should be used on Flying Police so future work stays
 fast, reviewable, and consistent with the architecture.
 
 ## Prompt Shape

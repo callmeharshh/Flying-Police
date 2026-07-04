@@ -1,4 +1,4 @@
-# Drone Security Analyst Agent — Code Documentation
+# Flying Police — Code Documentation
 
 **Version:** 1.0 | **Python:** 3.14 | **Framework:** LangChain 0.3 + GPT-4o-mini
 
@@ -45,7 +45,7 @@
 <a id="1-project-overview"></a>
 ## 1. Project Overview
 
-The Drone Security Analyst Agent processes surveillance video frame-by-frame to detect, classify, and alert on security events. It combines classical computer vision (OpenCV MOG2), a vision-language model (BLIP), and a reasoning agent (LangChain + GPT-4o-mini) with dual-database storage (SQLite + ChromaDB) and real-time Telegram notifications.
+Flying Police processes surveillance video frame-by-frame to detect, classify, and alert on security events. It combines classical computer vision (OpenCV MOG2), a vision-language model (BLIP), and a reasoning agent (LangChain + GPT-4o-mini) with dual-database storage (SQLite + ChromaDB) and real-time Telegram notifications.
 
 **Key properties:**
 - No cloud vision API per frame — BLIP runs fully locally
@@ -60,7 +60,7 @@ The Drone Security Analyst Agent processes surveillance video frame-by-frame to 
 
 ```
 ```
-Flying-CCTV/
+Flying-Police/
 ├── config.py                          # All constants + env-var loading
 ├── main.py                            # CLI entry point
 │
@@ -714,7 +714,7 @@ process(
 **System prompt excerpt:**
 
 ```
-You are a security analyst AI monitoring surveillance camera footage for a property.
+You are Flying Police, an AI security analyst monitoring surveillance camera footage for a property.
 You have access to tools to log events and check history.
 
 For each frame you receive, you MUST call log_event() once with a summary.
@@ -1977,7 +1977,7 @@ When the pipeline is working correctly, a CLI run looks like this:
 
 ```
 ============================================================
-  DRONE SECURITY ANALYST AGENT
+  FLYING POLICE
 ============================================================
 
   === SESSION INFO ===
@@ -2336,11 +2336,11 @@ SKIPPED: No validation fixtures — run scripts/capture_validation_set.py first
 <a id="132-scriptsgenerate-architecture-pptpy"></a>
 ### 13.2 `scripts/generate_architecture_ppt.py`
 
-Generates the 7-slide `Drone_Security_Agent_Architecture.pptx` using `python-pptx`.
+Generates the 7-slide `Flying_Police_Architecture.pptx` using `python-pptx`.
 
 ```bash
 python scripts/generate_architecture_ppt.py
-# Output: Drone_Security_Agent_Architecture.pptx (in project root)
+# Output: Flying_Police_Architecture.pptx (in project root)
 ```
 
 Slides generated:

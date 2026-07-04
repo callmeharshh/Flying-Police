@@ -12,7 +12,7 @@ from config import OPENAI_MODEL, AGENT_MEMORY_K, AGENT_VERBOSE
 
 load_dotenv()
 
-PROMPT_TEMPLATE = """You are a drone security analyst monitoring a fixed property.
+PROMPT_TEMPLATE = """You are Flying Police, an AI security analyst monitoring a fixed property.
 You receive frame-by-frame analysis from a surveillance drone.
 
 For each frame you get: timestamp, location, detected objects, activity, vision description, bbox position, motion tracking context, and pre-fired alerts.

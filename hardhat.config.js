@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
+require("dotenv").config({ path: ".env.local", override: true });
 
 const MONAD_RPC_URL = process.env.MONAD_RPC_URL || "https://testnet-rpc.monad.xyz";
 const MONAD_CHAIN_ID = Number(process.env.MONAD_CHAIN_ID || 10143);

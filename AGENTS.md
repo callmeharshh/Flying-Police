@@ -2,7 +2,7 @@
 
 ## Repository Expectations
 
-This repository contains a drone security analysis prototype. Codex should treat
+This repository contains Flying Police, a drone security analysis prototype. Codex should treat
 it as a Python application with deterministic alert rules, a LangChain agent
 layer, local VLM processing, SQLite/Chroma storage, and Streamlit UI tooling.
 

@@ -40,9 +40,28 @@ class EventStore:
                 tx_hash       TEXT,
                 status        TEXT,
                 message       TEXT,
+                location      TEXT,
+                alert_message TEXT,
+                ipfs_cid      TEXT,
                 FOREIGN KEY (event_id) REFERENCES events(event_id)
             );
         """)
+        self._conn.commit()
+        self._migrate_evidence_anchor_columns()
+
+    def _migrate_evidence_anchor_columns(self) -> None:
+        existing = {
+            row[1]
+            for row in self._conn.execute("PRAGMA table_info(evidence_anchors)").fetchall()
+        }
+        migrations = {
+            "location": "ALTER TABLE evidence_anchors ADD COLUMN location TEXT DEFAULT ''",
+            "alert_message": "ALTER TABLE evidence_anchors ADD COLUMN alert_message TEXT DEFAULT ''",
+            "ipfs_cid": "ALTER TABLE evidence_anchors ADD COLUMN ipfs_cid TEXT DEFAULT ''",
+        }
+        for column, statement in migrations.items():
+            if column not in existing:
+                self._conn.execute(statement)
         self._conn.commit()
 
     def log_event(self, frame_id: int, message: str, severity: str = "low", type: str = "log") -> str:
@@ -74,12 +93,27 @@ class EventStore:
         message: str = "",
         tx_hash: Optional[str] = None,
         event_id: Optional[str] = None,
+        location: str = "",
+        alert_message: str = "",
+        ipfs_cid: Optional[str] = None,
     ) -> str:
         anchor_id = f"anch_{uuid.uuid4().hex[:8]}"
         timestamp = datetime.utcnow().isoformat()
         self._conn.execute(
-            "INSERT INTO evidence_anchors VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (anchor_id, event_id, frame_id, timestamp, evidence_hash, tx_hash, status, message),
+            "INSERT INTO evidence_anchors VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                anchor_id,
+                event_id,
+                frame_id,
+                timestamp,
+                evidence_hash,
+                tx_hash,
+                status,
+                message,
+                location,
+                alert_message,
+                ipfs_cid or "",
+            ),
         )
         self._conn.commit()
         return anchor_id

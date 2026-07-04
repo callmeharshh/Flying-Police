@@ -1,7 +1,7 @@
 """
-PS.md §5 QA — integration tests for VLM detection, alerts, and indexing.
+Integration QA tests for VLM detection, alerts, and indexing.
 
-Maps to assignment examples:
+Maps to QA fixture examples:
   - Truck / vehicle detected and logged
   - Person detected (surveillance pipeline)
   - Security alert at night
@@ -95,7 +95,7 @@ def test_ps_blip_analyzes_car_crop(blip_analyzer: BLIPAnalyzer):
 
 @pytest.mark.integration
 def test_ps_blip_detects_vehicle_in_sample_image(blip_analyzer: BLIPAnalyzer):
-    """PS QA: vehicle object identified from a sample image (assignment: 'Blue truck at gate')."""
+    """PS QA: vehicle object identified from a sample image ('Blue truck at gate')."""
     path = _sample_image_path(VEHICLE_SAMPLE_FILE)
     result = blip_analyzer.analyze_full_image(Image.open(path))
 
@@ -123,7 +123,7 @@ def test_ps_blip_detects_person_via_mog2_pipeline(blip_analyzer: BLIPAnalyzer):
 
 @pytest.mark.integration
 def test_ps_night_person_triggers_rule01():
-    """PS QA: security alert when person detected at night (assignment sample alert)."""
+    """PS QA: security alert when person detected at night."""
     rules = AlertRulesEngine()
     alerts = rules.evaluate(
         frame_id=4,
@@ -140,7 +140,7 @@ def test_ps_night_person_triggers_rule01():
 
 @pytest.mark.integration
 def test_ps_truck_event_logged(tmp_path):
-    """PS QA: truck event stored in SQLite (assignment log example)."""
+    """PS QA: truck event stored in SQLite."""
     store = EventStore(db_path=str(tmp_path / "events.db"))
     store.log_event(
         frame_id=1,

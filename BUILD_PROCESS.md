@@ -1,7 +1,7 @@
-# How I Built the Flying CCTV
+# How I Built Flying Police
 
-**By Jayesh Shete** · FlytBase AI Engineer Assignment  
-**Repository:** [github.com/Jayesh1512/Flying-CCTV](https://github.com/Jayesh1512/Flying-CCTV)  
+**By Jayesh Shete**  
+**Repository:** [github.com/callmeharshh/Flying-Police](https://github.com/callmeharshh/Flying-Police)  
 **Stack:** Python 3.14 · OpenCV · BLIP · LangChain 0.3 · GPT-4o-mini · ChromaDB · SQLite · Telegram · Streamlit
 
 ---

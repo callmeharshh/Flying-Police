@@ -2,12 +2,12 @@
 
 ## Goal
 
-Make AirSecure feel like an autonomous security agent with verifiable on-chain
+Make Flying Police feel like an autonomous security agent with verifiable on-chain
 memory on Monad, not just a video-analysis dashboard.
 
 ## Winning Demo Sentence
 
-AirSecure detects a real-world security event, turns the alert into tamper-proof
+Flying Police detects a real-world security event, turns the alert into tamper-proof
 evidence, anchors the proof on Monad, and lets anyone verify the agent's action.
 
 ## Must Finish Today
@@ -52,7 +52,7 @@ EVIDENCE_REGISTRY_ADDRESS=0x...
 ## Pitch Structure
 
 1. Problem: autonomous agents can act, but their actions are hard to trust.
-2. Demo: AirSecure watches drone/security footage and detects a threat.
+2. Demo: Flying Police watches drone/security footage and detects a threat.
 3. Proof: the alert becomes canonical evidence, then gets anchored on Monad.
 4. Verification: the UI exposes the evidence hash and transaction link.
 5. Why Monad: high throughput and low fees make frequent agent evidence practical.
